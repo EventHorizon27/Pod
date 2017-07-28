@@ -1,10 +1,11 @@
 #!/bin/bash
-cd /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM
-while read p; do
-  wget $p &
-  url=$p
-done <vmdata.txt
-#wget  "http://dl-cdn.alpinelinux.org/alpine/v3.6/releases/x86_64/alpine-minirootfs-3.6.2-x86_64.tar.gz" &
+#cd /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM
+vars=( $(cut -d '=' -f1 vmdata.txt) )
+
+  wget [[${vars[*]}]] &
+  url=[[${vars[*]}]]
+done <./vmdata.txt
+wget  "http://dl-cdn.alpinelinux.org/alpine/v3.6/releases/x86_64/alpine-minirootfs-3.6.2-x86_64.tar.gz" &
 sleep 15
 filename=$(basename "$url")
 cp /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/$filename /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem
@@ -18,8 +19,7 @@ if [[${filetype[1]}=='tar']]; then
   gunzip $filename
   tar -xvf "${filetype[0]}${filetype[1]}"
   rm "${filetype[0]}${filetype[1]}"
-done
+
 elif [[${filetype[1]}=='zip']]; then
   gunzip $filename
   rm "${filetype[0]}${filetype[1]}"
-done
