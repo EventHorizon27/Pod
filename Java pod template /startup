@@ -1,6 +1,9 @@
 #!/bin/bash
 vars=( $(cut -d '=' -f1 config.txt) )
-cp ./libraries ./VM/filesystem/root
-chroot ./VM/filesystem
+cp ./libraries ./VM/filesystem/root/libs
 cp ./Program\ files ./VM/filesystem/root
-javac ./VM/filesystem/root/[[${vars[*]}]]
+chroot ./VM/filesystem
+javac ./VM/filesystem/root/[[${vars[0]}]]
+javac ./VM/filesystem/root/[[${vars[1]}]]
+ip=ip route get 1 | awk '{print $NF;exit}'
+while :; do clear; rsync -av --progress --exclude={"install-libs","libs.txt",".DS_Store" }  root@$ip:./sharedfiles/$ip root@[[${vars[2]}]]:./sharedfiles/$ip; sleep 60; done

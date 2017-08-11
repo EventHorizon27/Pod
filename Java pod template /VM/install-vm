@@ -5,7 +5,7 @@ vars=( $(cut -d '=' -f1 vmdata.txt) )
   wget [[${vars[*]}]] &
   url=[[${vars[*]}]]
 
-wget  "http://dl-cdn.alpinelinux.org/alpine/v3.6/releases/x86_64/alpine-minirootfs-3.6.2-x86_64.tar.gz" &
+#wget  "http://dl-cdn.alpinelinux.org/alpine/v3.6/releases/x86_64/alpine-minirootfs-3.6.2-x86_64.tar.gz" &
 exitstatus=wait $!
 if [[$exitstatus=='0']]; then
   filename=$(basename "$url")
@@ -26,3 +26,6 @@ if [[$exitstatus=='0']]; then
     rm "${filetype[0]}${filetype[1]}"
   fi
 fi
+mkdir ./filesystem/root/private
+mkdir ./filesystem/root/shared
+mkdir ./filesystem/root/libs
