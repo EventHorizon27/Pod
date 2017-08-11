@@ -5,6 +5,7 @@ unamestr=`uname`
 if [[ "$unamestr" == 'Linux' ]]; then
    platform='linux'
    sudo apt-get install openjdk-8-jdk
+   sudo apt-get install nmap
 fi
 elif [[ "$unamestr" == 'MacOS'||'OSX' ]]; then
   platform='MacOS'
@@ -13,7 +14,7 @@ elif [[ "$unamestr" == 'MacOS'||'OSX' ]]; then
   check=xcode-select -p
   if [[$check==2]]; then
   xcode-select --install
-  fi
+   fi
   cd ~/Downloads
   curl -O http://ftp.gnu.org/gnu/wget/wget-1.15.tar.gz
   tar xvzf wget-1.15.tar.gz
@@ -21,7 +22,7 @@ elif [[ "$unamestr" == 'MacOS'||'OSX' ]]; then
   ./configure --with-ssl=openssl
   make
   sudo make install
-
+  brew install nmap
   brew update
   brew cask install java
 fi

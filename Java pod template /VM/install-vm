@@ -4,22 +4,25 @@ vars=( $(cut -d '=' -f1 vmdata.txt) )
 
   wget [[${vars[*]}]] &
   url=[[${vars[*]}]]
-done <./vmdata.txt
+
 wget  "http://dl-cdn.alpinelinux.org/alpine/v3.6/releases/x86_64/alpine-minirootfs-3.6.2-x86_64.tar.gz" &
-sleep 15
-filename=$(basename "$url")
-cp /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/$filename /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem
-cd /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem
-IN="$filename"
+exitstatus=wait $!
+if [[$exitstatus=='0']]; then
+  filename=$(basename "$url")
+  cp /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/$filename /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem
+  cd /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem
+  IN="$filename"
 
-filetype=$(echo $IN | tr "." "\n")
+  filetype=$(echo $IN | tr "." "\n")
 
 
-if [[${filetype[1]}=='tar']]; then
-  gunzip $filename
-  tar -xvf "${filetype[0]}${filetype[1]}"
-  rm "${filetype[0]}${filetype[1]}"
-
-elif [[${filetype[1]}=='zip']]; then
-  gunzip $filename
-  rm "${filetype[0]}${filetype[1]}"
+  if [[${filetype[1]}=='tar']]; then
+    gunzip $filename
+    tar -xvf "${filetype[0]}${filetype[1]}"
+    rm "${filetype[0]}${filetype[1]}"
+  fi
+  elif [[${filetype[1]}=='zip']]; then
+    gunzip $filename
+    rm "${filetype[0]}${filetype[1]}"
+  fi
+fi

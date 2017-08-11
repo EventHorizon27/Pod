@@ -1,2 +1,6 @@
 #!/bin/bash
-VBoxManage startvm "Alpine" --type headless
+vars=( $(cut -d '=' -f1 config.txt) )
+cp ./libraries ./VM/filesystem/root
+chroot ./VM/filesystem
+cp ./Program\ files ./VM/filesystem/root
+javac ./VM/filesystem/root/[[${vars[*]}]]
