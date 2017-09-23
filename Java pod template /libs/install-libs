@@ -1,0 +1,104 @@
+#!/bin/bash
+IFS=$'\n' read -d '' -r -a lines < ../config
+seperators=$"grep -n "----" ./config"
+t="$((${#seperators[@]}-2))"
+b="$((${#seperators[@]}-1))"
+if [[ "${#seperators[@]}" -gt 2 ]] ; then
+    
+    for i in ${seperators[1..$t}
+        do
+            :
+            x="$((${seperators[i]}-1))"
+            z="$((${seperators[i-1]}+1))"
+            for p in ${lines[seperators[$x]..seperators[$z]]}
+            do
+                :
+                if echo "${lines[p]}" | grep -E '(https?|ftp|file)://[-A-Z0-9\+&@#/%?=~_|!:,.;]*[-A-Z0-9\+&@#/%=~_|]'; then
+                temp="${lines[p]}"
+                temp2=(${temp//:/ })
+                
+                    wget "${temp2[1]}" &
+                else
+                    echo "Link not valid"
+                fi
+                
+            done
+            
+        done
+        unamestr=$OSTYPE
+    if [[ "$unamestr" == *"linux"* ]]; then
+        str="[alpine]
+description=Alpine miniroot
+location=/var/chroot
+priority=3
+users=root
+groups=sbuild
+root-groups=root"
+        apt-get install schroot
+        sudo apt-get install schroot
+        cat $str >> '/etc/schroot/schroot.conf'
+        distro=$($ lsb_release -a)
+        VERSION=v3.0
+        MIRROR=http://dl-5.alpinelinux.org/alpine
+    
+  
+        if [[ "$distro" == *"fedora"* ]]; then
+     
+    mount --bind /proc ../VM/filesystem /proc
+    mknod -m 666 ../VM/filesystem /dev/full c 1 7
+    mknod -m 666 ../VM/filesystem /dev/ptmx c 5 2
+mknod -m 644 ../VM/filesystem /dev/random c 1 8
+mknod -m 644 ../VM/filesystem /dev/urandom c 1 9
+mknod -m 666 ../VM/filesystem /dev/zero c 1 5
+mknod -m 666 ../VM/filesystem /dev/tty c 5 0
+rm -f ../VM/filesystem /dev/null
+mknod -m 666 ../VM/filesystem /dev/null c 1 3
+elif [[ "$distro" == *"ubuntu"* ]]; then
+mknod -m 666 ../VM/filesystem /dev/full c 1 7
+mknod -m 666 ../VM/filesystem /dev/ptmx c 5 2
+mknod -m 644 ../VM/filesystem /dev/random c 1 8
+mknod -m 644 ../VM/filesystem /dev/urandom c 1 9
+mknod -m 666 ../VM/filesystem /dev/zero c 1 5
+mknod -m 666 ../VM/filesystem /dev/tty c 5 0
+
+fi
+mknod -m 666 ../VM/filesystem /dev/sda b 8 0
+mknod -m 666 ../VM/filesystem /dev/sda1 b 8 1
+mknod -m 666 ../VM/filesystem /dev/sda2 b 8 2
+mknod -m 666 ../VM/filesystem /dev/sda3 b 8 3
+mknod -m 666 ../VM/filesystem /dev/sda4 b 8 4
+mknod -m 666 ../VM/filesystem /dev/sda5 b 8 5
+mknod -m 666 ../VM/filesystem /dev/sda6 b 8 6
+mknod -m 666 ../VM/filesystem /dev/sdb b 8 16
+mknod -m 666 ../VM/filesystem /dev/sdb1 b 8 17
+mknod -m 666 ../VM/filesystem /dev/sdb2 b 8 18
+mknod -m 666 ../VM/filesystem /dev/sdb3 b 8 19
+mknod -m 666 ../VM/filesystem /dev/sdb4 b 8 20
+mknod -m 666 ../VM/filesystem /dev/sdb5 b 8 21
+mknod -m 666 ../VM/filesystem /dev/sdb6 b 8 22
+cp /etc/resolv.conf ../VM/filesystem /etc/
+echo "$MIRROR/$VERSION/main" >  ../VM/filesystem /etc/apk/repositories
+    elif [[ $unamestr == *"darwin"* ]]; then
+        ../mkjail
+fi
+    apk --update add curl ca-certificates tar sqlite icu bash && \
+    curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
+    apk add --allow-untrusted /tmp/glibc-2.21-r2.apk
+    apk add openjdk8-jre-base
+    apk add openjdk8
+
+        for i in ${lines[seperators[$t..$b]]}
+        do
+            :
+            x="$((${seperators[i]}-1))"
+            z="$((${seperators[i-1]}+1))"
+            for p in ${lines[seperators[$x]..seperators[$z]]}
+            do
+                :
+                apk add $p
+            
+        done
+    done
+fi
+exit
+

@@ -1,9 +1,100 @@
 #!/bin/bash
-vars=( $(cut -d '=' -f1 config.txt) )
-cp ./libraries ./VM/filesystem/root/libs
-cp ./Program\ files ./VM/filesystem/root
-chroot ./VM/filesystem
-javac ./VM/filesystem/root/[[${vars[0]}]]
-javac ./VM/filesystem/root/[[${vars[1]}]]
-ip=ip route get 1 | awk '{print $NF;exit}'
-while :; do clear; rsync -av --progress --exclude={"install-libs","libs.txt",".DS_Store" }  root@$ip:./sharedfiles/$ip root@[[${vars[2]}]]:./sharedfiles/$ip; sleep 60; done
+#ismaster=false
+concat=${0:-}
+run=${1:-'if [[ "${#seperators[@]}" -gt 2 ]] ; then
+for i in ${seperators[1]..seperators[1]-seperators[t]]]}
+do
+dependencies[i]="-classpath .:"
+done
+for i in ${seperators[1..$l}
+do
+    :
+    for p in ${vars[seperators[i]..vars[seperators[i-1]]}
+        do
+            :
+            dependencies[i]+=${vars[p]}$delin
+            
+        done
+        
+    done
+fi
+java=".java"
+class=".class"
+for i in ${vars[seperators[0]..seperators[1]]}
+do
+    :
+    javac -classpath ${dependencies[i]} ./root/$i$java
+    java -classpath ${dependencies[i]} ./root/$i$class
+done'}
+if [[ $concat == '-c' ]]; then
+
+d='if [[ "${#seperators[@]}" -gt 2 ]] ; then
+for i in ${seperators[1]..seperators[1]-seperators[t]]]}
+do
+dependencies[i]="-classpath .:"
+done
+for i in ${seperators[1..$l}
+do
+    :
+    for p in ${vars[seperators[i]..vars[seperators[i-1]]}
+        do
+            :
+            dependencies[i]+=${vars[p]}$delin
+            
+        done
+        
+    done
+fi
+java=".java"
+class=".class"
+for i in ${vars[seperators[0]..seperators[1]]}
+do
+    :
+    javac -classpath ${dependencies[i]} ./root/$i$java
+    java -classpath ${dependencies[i]} ./root/$i$class
+done'
+run="$1"\n"$d"
+fi
+IFS=$'\n' read -d '' -r -a vars < ./config
+
+yes | cp -rf -a ./libraries/. ./VM/filesystem/root/libs
+yes | cp -rf -a ./Program\ files/. ./VM/filesystem/root/programs
+yes | cp -rf -a ./configs/. ./VM/filesystem/root/configs
+yes | cp -rf -a ./Scripts/. ./VM/filesystem/usr/bin
+cd ./VM/filesystem || return
+rm ./install-libs
+rm ./libs.txt
+rm ./.DS_Store
+cd ../../../../Java\ Pod\ Template || return
+#masterip="${vars[2]}"
+delin=":"
+l="$((${#seperators[@]}))"
+t="$((${#seperators[@]}-1))"
+seperators=$"grep -n "----" ./config"
+
+ip=$"ip route get 1 | awk '{print $NF;exit}'"
+unamestr=$OSTYPE
+date=$(date)
+user=$(finger)
+Alpine="alpine"
+token=$date$user$OSTYPE$Alpine
+tokenhash=$(md5 $token)
+if [[ $unamestr == *"linux"* ]]; then
+    MIRROR=http://dl-5.alpinelinux.org/alpine
+    ARCH=x86_64
+    CHROOT=alpine-chroot
+    VERSION=v3.0
+    APK_TOOL=apk-tools-static-2.6.7-r0.apk
+    
+    
+    sudo mount -o bind /proc ./filesystem/proc
+    chroot ./filesystem
+    elif [[ $unamestr == *"darwin"* ]] ; then
+    ../mkjail
+fi
+$run
+while :; do clear;
+    rsync -av --progress --exclude={}  root@$ip:./sharedfiles/$ip root@[[${vars[2]}]]:./sharedfiles/$ip;
+    
+    sleep 15;
+done

@@ -1,31 +1,38 @@
 #!/bin/bash
 #cd /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM
-vars=( $(cut -d '=' -f1 vmdata.txt) )
+vars=( $(cut -d '=' -f1 ./VM/vmdata) )
 
-  wget [[${vars[*]}]] &
-  url=[[${vars[*]}]]
-
+wget [[${vars[*]}]] &
+url=[[${vars[*]}]]
 #wget  "http://dl-cdn.alpinelinux.org/alpine/v3.6/releases/x86_64/alpine-minirootfs-3.6.2-x86_64.tar.gz" &
-exitstatus=wait $!
-if [[$exitstatus=='0']]; then
-  filename=$(basename "$url")
-  cp /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/$filename /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem
-  cd /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem
-  IN="$filename"
-
-  filetype=$(echo $IN | tr "." "\n")
-
-
-  if [[${filetype[1]}=='tar']]; then
+exitstatus="$(wait $!)"
+if [[ $exitstatus == '0' ]]; then
+    filename=$(basename "$url" ".tar.gz")
+    cp /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/'$filename' /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem
+    cd /Users/colechristini/GitHub/Pod/Java\ pod\ template\ OSX/VM/filesystem || return
+    IN="$filename"
+    
+    filetype=$(echo $IN | tr "." "\n")
+    
+    
+    if [[ ${filetype[1]} == 'tar' ]]; then
+        gunzip $filename
+        tar -xvf "${filetype[0]}${filetype[1]}"
+        cp -r ./alpine-minirootfs-3.6.2-x86_64/* ./
+        rm "${filetype[0]}${filetype[1]}"
+        rm "${filetype[0]}"
+        
+    fi
+    elif [[ ${filetype[1]} == 'zip' ]]; then
     gunzip $filename
-    tar -xvf "${filetype[0]}${filetype[1]}"
     rm "${filetype[0]}${filetype[1]}"
-  fi
-  elif [[${filetype[1]}=='zip']]; then
-    gunzip $filename
-    rm "${filetype[0]}${filetype[1]}"
-  fi
 fi
-mkdir ./filesystem/root/private
-mkdir ./filesystem/root/shared
-mkdir ./filesystem/root/libs
+
+mkdir ./VM/filesystem/root/private
+mkdir ./VM/filesystem/root/shared
+mkdir ./VM/filesystem/root/libs
+mkdir ./VM/filesystem/root/programs
+mkdir ./VM/filesystem/root/configs
+
+exit
+
