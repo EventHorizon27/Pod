@@ -26,6 +26,7 @@ if [[ "${#seperators[@]}" -gt 2 ]] ; then
             
         done
         unamestr=$OSTYPE
+        cd ../VM
     if [[ "$unamestr" == *"linux"* ]]; then
         str="[alpine]
 description=Alpine miniroot
@@ -79,7 +80,7 @@ mknod -m 666 ../VM/filesystem /dev/sdb6 b 8 22
 cp /etc/resolv.conf ../VM/filesystem /etc/
 echo "$MIRROR/$VERSION/main" >  ../VM/filesystem /etc/apk/repositories
     elif [[ $unamestr == *"darwin"* ]]; then
-        ../mkjail
+       sudo chroot ./filesystem 
 fi
     apk --update add curl ca-certificates tar sqlite icu bash && \
     curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
