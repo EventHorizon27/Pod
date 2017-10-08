@@ -6,6 +6,9 @@ redis
 jetty-runner
 ———-
 redis-server
-cd ./root/programs/webapps/redisServlet
+cp ./libs ./programs/webapps/WEB-INF/libs
+cd ./programs/webapps/
+javac -classpath ./WEB-INF/libs/jedis-2.9.0.jar ../HttpServletRedis.java
+cp ../HttpServletRedis.class ./WEB-INF/classes
 java -jar $JETTY_HOME/start.jar
 
